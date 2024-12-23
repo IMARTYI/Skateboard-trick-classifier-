@@ -6,6 +6,8 @@ import os
 video_path = "./data/skate.mp4"  # Path to the input video
 output_video_path = "./output/output.mp4"  # Path to the output video
 window_name = "Trick"
+csv_results =[] # List to output csv results
+frame_number = 0
 
 # Load MediaPipe Pose
 mp_pose = mp.solutions.pose
@@ -33,6 +35,11 @@ out = cv2.VideoWriter(output_video_path, fourcc, original_fps, output_resolution
 
 cv2.namedWindow(window_name)
 
+def write_landmarks_to_csv(csv_data,frame_number,landmarks):
+    print(f"Landmark coordinates for frame {frame_number}:")
+    for idx, landmark in enumerate(landmarks):
+        print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
+
 # Process video frames
 while cap.isOpened():
     ret, frame = cap.read()
@@ -55,6 +62,9 @@ while cap.isOpened():
             landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style(),
         )
 
+        write_landmarks_to_csv(csv_results, frame_number, results.pose_landmarks.landmark)
+
+
     # Write the processed frame to the output video
     out.write(frame)
 
@@ -64,6 +74,10 @@ while cap.isOpened():
     # Exit on pressing 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
+
+
+# Function that will out put each landmark coordinates
 
 # Release resources
 cap.release()
