@@ -30,6 +30,8 @@ RELEVANT_LANDMARKS = [
     mp_pose.PoseLandmark.RIGHT_KNEE,
     mp_pose.PoseLandmark.LEFT_ANKLE,
     mp_pose.PoseLandmark.RIGHT_ANKLE,
+    mp_pose.PoseLandmark.LEFT_HEEL,
+    mp_pose.PoseLandmark.RIGHT_HEEL,
     mp_pose.PoseLandmark.LEFT_FOOT_INDEX,
     mp_pose.PoseLandmark.RIGHT_FOOT_INDEX
 ]
@@ -47,7 +49,7 @@ with open(output_csv_path, mode="w", newline="") as csv_file:
         ])
     csv_writer.writerow(header)
 
-    # Process videos
+
     for filename in os.listdir(video_path):
         path = os.path.join(video_path, filename)
         cap = cv2.VideoCapture(path)
@@ -81,7 +83,7 @@ with open(output_csv_path, mode="w", newline="") as csv_file:
             # Process the frame with MediaPipe Pose
             results = pose.process(frame_rgb)
 
-            # Write landmarks to CSV
+
             if results.pose_landmarks:
                 row = [frame_number]
                 for landmark in RELEVANT_LANDMARKS:
